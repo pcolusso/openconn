@@ -13,11 +13,13 @@
       let
         pkgs = import nixpkgs {
           inherit system;
-          overlays = [ rust-overlay.overlay ];
+          overlays = [ rust-overlay.overlays.default ];
         };
-        rustPackage = pkgs.rustBuilder.makePackage {
-          name = "openconn";
-          src = ./.;
+        rustPackage = pkgs.rustPlatform.buildRustPackage rec {
+          pname = "openconn";
+          cargoLock.lockFile = ./Cargo.lock;
+          version = "0.1";
+          src = pkgs.lib.cleanSource ./.;
         };
       in
       {
